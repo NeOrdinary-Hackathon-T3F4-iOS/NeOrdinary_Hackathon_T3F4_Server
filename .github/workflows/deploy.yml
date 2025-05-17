@@ -58,6 +58,9 @@ jobs:
             MYSQL_URL="${{ secrets.MYSQL_URL }}"
             MYSQL_USERNAME="${{ secrets.MYSQL_USERNAME }}"
             MYSQL_PASSWORD="${{ secrets.MYSQL_PASSWORD }}"
+            S3_BUCKET_NAME="${{ secrets.S3_BUCKET_NAME }}"
+            S3_ACCESS_KEY="${{ secrets.S3_ACCESS_KEY }}"
+            S3_SECRET_KEY="${{ secrets.S3_SECRET_KEY }}"
 
             echo "IMAGE_NAME is '$IMAGE_NAME'"
 
@@ -85,4 +88,7 @@ jobs:
               -e MYSQL_URL="${MYSQL_URL}" \
               -e MYSQL_USERNAME="${MYSQL_USERNAME}" \
               -e MYSQL_PASSWORD="${MYSQL_PASSWORD}" \
+              -e S3_BUCKET_NAME="${S3_BUCKET_NAME}" \ 
+              -e S3_ACCESS_KEY="${S3_ACCESS_KEY}" \
+              -e S3_SECRET_KEY="${S3_SECRET_KEY}" \
               "$IMAGE_TAG"
