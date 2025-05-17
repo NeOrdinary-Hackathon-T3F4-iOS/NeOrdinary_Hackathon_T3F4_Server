@@ -28,6 +28,7 @@ public class AvatarService {
     private final AvatarRepository avatarRepository;
     private final MemberRepository memberRepository;
     private final GrothLevelRepository grothLevelRepository;
+    private final MemberAvatarRepository memberAvatarRepository;
 
     private final Map<RewardType, Integer> rewardPointMap = Map.of(
             RewardType.SUN, 1,
@@ -93,6 +94,34 @@ public class AvatarService {
     private AvatarType getRandomGrownAvatarType() {
         AvatarType[] grownTypes = {AvatarType.SHAMPO, AvatarType.BODY, AvatarType.WASH};
         return grownTypes[new Random().nextInt(grownTypes.length)];
+    }
+
+    public AvatarResponse createAvatar(String uuid, AvatarCreateRequest request) {
+        Member member = (Member) memberRepository.findByUuid(uuid)
+                .orElseThrow(() -> new GeneralException(ErrorStatus._MEMBER_NOT_FOUND));
+
+        Avatar avatar = Avatar.builder()
+                .realName(request.getRealName())
+                .build();
+
+        avatarRepository.save(avatar);
+
+        MemberAvatar memberCharacter = MemberAvatar.builder()
+                .member(member)
+                .avatar(avatar)
+                .currentGroth(0)
+                .build();
+
+        memberAvatarRepository.save(memberCharacter);
+
+        GrothLevel grothLevel = GrothLevel.builder()
+                .avatar(avatar)
+                .level(1)             // 초기 레벨
+                .requirement(0)       // 초기 요구치 (포인트)
+                .label(GrothType.SPROUT) // 초기 성장 단계
+                .build();
+
+        return AvatarResponse.from(avatar, grothLevel);
     }
 
 }
