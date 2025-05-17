@@ -27,8 +27,6 @@ public class DBTestdataConfig {
                      GrothLevelRepository grothLevelRepository) {
         // Member 생성
         Member member = Member.builder()
-                .name("홍길동")
-                .status("ACTIVE")
                 .uuid(UUID.randomUUID().toString())
                 .build();
         member = memberRepository.save(member);

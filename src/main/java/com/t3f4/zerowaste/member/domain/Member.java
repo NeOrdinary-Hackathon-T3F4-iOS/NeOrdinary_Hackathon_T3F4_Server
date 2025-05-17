@@ -12,17 +12,19 @@ import java.util.List;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
-@Builder
 public class Member extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    private String name;
-    private String status;
 
-    @Column(length = 36, unique = true, nullable = false)
+    @Column(length = 50, unique = true, nullable = false)
     private String uuid;
 
     @OneToMany(mappedBy = "member")
     private List<MemberMission> memberMissions = new ArrayList<>();
+
+    @Builder
+    public Member(String uuid) {
+        this.uuid = uuid;
+    }
 }
