@@ -5,7 +5,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
 import java.util.List;
 
 @Data
@@ -14,10 +13,10 @@ import java.util.List;
 @Builder
 public class MissionStatDto {
     private String title;
+    private int count_reward;
+    private int count_current;
     private String content;
-    private int count;
-    private int reward;
-    private Date deadline;
+    private String reward;
     private String periodType;
-    private List<String> imageUrl;
+    private List<ImageDto> images;
 }

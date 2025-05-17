@@ -1,5 +1,6 @@
 package com.t3f4.zerowaste.mission.domain;
 
+import com.t3f4.zerowaste.global.domain.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -8,7 +9,7 @@ import lombok.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder
-public class Photo {
+public class Photo extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;

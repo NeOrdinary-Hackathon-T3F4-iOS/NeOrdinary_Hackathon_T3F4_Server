@@ -10,15 +10,14 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @Repository
 public interface MemberMissionRepository extends JpaRepository<MemberMission, Long> {
     @EntityGraph(attributePaths = {"member", "mission", "photo"})
     Optional<MemberMission> findById(long id);
 
-    @Query("select new com.t3f4.zerowaste.mission.dto.MissionStatRepoDto(m.title, m.content," +
-            "m.count, m.reward, m.deadline, m.periodType, me.name, p.imageUrl)" +
+    @Query("select new com.t3f4.zerowaste.mission.dto.MissionStatRepoDto(m.title, m.count, mm.count," +
+            " m.content, m.reward, m.periodType, me.uuid, p.imageUrl, p.updatedAt)" +
             " from MemberMission mm join mm.member me join mm.mission m left join mm.photos p" +
             " where mm.id=:id")
     List<MissionStatRepoDto> findByIdInDto(@Param("id") long id);
