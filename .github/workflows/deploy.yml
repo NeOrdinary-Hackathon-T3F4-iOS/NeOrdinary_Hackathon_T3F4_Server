@@ -43,8 +43,8 @@ jobs:
 
       - name: Build and Push Docker image
         run: |
-          docker build -t $IMAGE_NAME:${{ steps.vars.outputs.sha }} .
-          docker push $IMAGE_NAME:${{ steps.vars.outputs.sha }}
+          docker build -t ${{ secrets.SPRING_IMAGE }}:${{ steps.vars.outputs.sha }} .
+          docker push ${{ secrets.SPRING_IMAGE }}:${{ steps.vars.outputs.sha }}
 
       - name: Deploy to EC2 via SSH
         uses: appleboy/ssh-action@v0.1.10
@@ -52,12 +52,13 @@ jobs:
           host: ${{ secrets.EC2_HOST }}
           username: ubuntu
           key: ${{ secrets.EC2_SSH_KEY }}
-          env: |
-            IMAGE_NAME=${{ secrets.SPRING_IMAGE }}
-            MYSQL_URL=${{ secrets.MYSQL_URL }}
-            MYSQL_USERNAME=${{ secrets.MYSQL_USERNAME }}
-            MYSQL_PASSWORD=${{ secrets.MYSQL_PASSWORD }}
           script: |
+            # 시크릿 직접 할당
+            IMAGE_NAME="${{ secrets.SPRING_IMAGE }}"
+            MYSQL_URL="${{ secrets.MYSQL_URL }}"
+            MYSQL_USERNAME="${{ secrets.MYSQL_USERNAME }}"
+            MYSQL_PASSWORD="${{ secrets.MYSQL_PASSWORD }}"
+
             echo "IMAGE_NAME is '$IMAGE_NAME'"
 
             IMAGE_TAG="${IMAGE_NAME}:${{ steps.vars.outputs.sha }}"
