@@ -1,4 +1,4 @@
-name: CD - Deploy to EC2
+name: CD
 
 on:
   workflow_run:
@@ -14,14 +14,12 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Download SHA artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: image-sha
+      - name: Checkout code (to get git info)
+        uses: actions/checkout@v3
 
-      - name: Read image tag
-        id: sha
-        run: echo "sha=$(cat image-sha.txt)" >> $GITHUB_OUTPUT
+      - name: Extract short SHA
+        id: vars
+        run: echo "sha=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
 
       - name: Deploy to EC2 via SSH
         uses: appleboy/ssh-action@v0.1.10
@@ -30,13 +28,13 @@ jobs:
           username: ubuntu
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            docker pull $IMAGE_NAME:${{ steps.sha.outputs.sha }}
-            docker stop zerowaste-server || true
-            docker rm zerowaste-server || true
+            docker pull $IMAGE_NAME:${{ steps.vars.outputs.sha }}
+            docker stop zerowaste-app || true
+            docker rm zerowaste-app || true
             docker run -d \
               --name zerowaste-app \
               -p 8080:8080 \
               -e MYSQL_URL="${{ secrets.MYSQL_URL }}" \
               -e MYSQL_USERNAME="${{ secrets.MYSQL_USERNAME }}" \
               -e MYSQL_PASSWORD="${{ secrets.MYSQL_PASSWORD }}" \
-              $IMAGE_NAME:${{ steps.sha.outputs.sha }}
+              $IMAGE_NAME:${{ steps.vars.outputs.sha }}
