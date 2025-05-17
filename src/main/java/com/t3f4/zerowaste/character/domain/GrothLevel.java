@@ -13,9 +13,9 @@ public class GrothLevel {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private int level;
-    private String condition;
+    private int requirement;
     private String label;
     private String imageUrl;
     @ManyToOne(fetch = FetchType.LAZY)
-    private Character character;
+    private Avatar avatar;
 }

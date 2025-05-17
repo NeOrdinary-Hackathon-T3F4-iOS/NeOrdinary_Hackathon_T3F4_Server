@@ -1,6 +1,9 @@
 package com.t3f4.zerowaste.character.domain;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import lombok.*;
 
 @Entity
@@ -8,12 +11,9 @@ import lombok.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder
-public class Character {
+public class AvatarType {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    private String hiddenName;
-    private String realName;
-    @ManyToOne(fetch = FetchType.LAZY)
-    private CharacterType characterType;
+    private String typeName;
 }
