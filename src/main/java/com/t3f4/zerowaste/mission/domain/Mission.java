@@ -21,5 +21,5 @@ public class Mission extends BaseEntity {
     private int reward;
     private Date deadline;
     @Enumerated(EnumType.STRING)
-    private PeriodType period_type;
+    private PeriodType periodType;
 }
