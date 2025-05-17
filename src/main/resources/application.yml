@@ -1,8 +1,18 @@
 spring:
+  config:
+    import:
+      - mysql.yml
   application:
     name: zerowaste
-
 
 logging:
   level:
     root: info
+server:
+  port: 0
+
+---
+spring.config.activate.on-profile: local
+
+---
+spring.config.activate.on-profile: dev
