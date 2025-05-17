@@ -28,10 +28,10 @@ jobs:
           username: ubuntu
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            docker pull $IMAGE_NAME:${{ steps.vars.outputs.sha }}
-            docker stop zerowaste-app || true
-            docker rm zerowaste-app || true
-            docker run -d \
+            sudo docker pull $IMAGE_NAME:${{ steps.vars.outputs.sha }}
+            sudo docker stop zerowaste-app || true
+            sudo docker rm zerowaste-app || true
+            sudo docker run -d \
               --name zerowaste-app \
               -p 8080:8080 \
               -e MYSQL_URL="${{ secrets.MYSQL_URL }}" \
