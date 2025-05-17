@@ -3,6 +3,7 @@ package com.t3f4.zerowaste.avatar.dto;
 import com.t3f4.zerowaste.avatar.domain.Avatar;
 import com.t3f4.zerowaste.avatar.domain.AvatarType;
 import com.t3f4.zerowaste.avatar.domain.GrothLevel;
+import com.t3f4.zerowaste.avatar.domain.GrothType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -11,7 +12,7 @@ import lombok.Getter;
 public class GrothLevelResponse {
     private int level;
     private int requirement;
-    private String label;
+    private GrothType label;
 
     public static GrothLevelResponse from(GrothLevel grothLevel) {
         return new GrothLevelResponse(

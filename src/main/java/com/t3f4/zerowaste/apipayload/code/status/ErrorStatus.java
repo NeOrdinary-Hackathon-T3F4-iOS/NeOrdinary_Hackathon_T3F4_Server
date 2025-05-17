@@ -18,8 +18,9 @@ public enum ErrorStatus implements BaseErrorCode {
     _MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "MEMBER404", "해당 회원이 존재하지 않습니다."),
     _MISSION_MEMBER_NOT_MATCH(HttpStatus.FORBIDDEN, "MISSION403", "권한이 없습니다."),
     _MISSION_NOT_FOUND(HttpStatus.NOT_FOUND, "MISSION404", "미션이 없습니다."),
-    _LEVEL_NOT_FOUND(HttpStatus.NOT_FOUND, "GROTH_404", "성장 정보가 존재하지 않습니다.");
-
+    _LEVEL_NOT_FOUND(HttpStatus.NOT_FOUND, "GROTH_404", "성장 정보가 존재하지 않습니다."),
+    _REWARD_NOT_ENOUGH(HttpStatus.BAD_REQUEST, "REWARD_400", "사용 가능한 아이템이 부족합니다."),
+    _AVATAR_NOT_FOUND(HttpStatus.NOT_FOUND, "AVATAR_404", "아바타를 찾을 수 없습니다.");
     private final HttpStatus httpStatus;
     private final String code;
     private final String message;
