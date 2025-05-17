@@ -1,6 +1,6 @@
 package com.t3f4.zerowaste.member.domain;
 
-import com.t3f4.zerowaste.domain.BaseEntity;
+import com.t3f4.zerowaste.global.domain.BaseEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
