@@ -1,10 +1,7 @@
 package com.t3f4.zerowaste.mission.domain;
 
 import com.t3f4.zerowaste.domain.BaseEntity;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.Date;
@@ -23,5 +20,6 @@ public class Mission extends BaseEntity {
     private int count;
     private int reward;
     private Date deadline;
-    private String period_type;
+    @Enumerated(EnumType.STRING)
+    private PeriodType period_type;
 }

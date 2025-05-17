@@ -14,7 +14,8 @@ public class Point {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private int reward;
-    private String imageUrl;
+    @Enumerated(EnumType.STRING)
+    private RewardType rewardType;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Member member;
