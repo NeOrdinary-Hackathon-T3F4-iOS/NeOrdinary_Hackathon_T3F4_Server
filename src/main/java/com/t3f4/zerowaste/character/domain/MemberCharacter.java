@@ -19,5 +19,5 @@ public class MemberCharacter {
     @ManyToOne(fetch = FetchType.LAZY)
     private Member member;
     @ManyToOne(fetch = FetchType.LAZY)
-    private Character character;
+    private Avatar avatar;
 }
