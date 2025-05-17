@@ -1,0 +1,42 @@
+name: CD - Deploy to EC2
+
+on:
+  workflow_run:
+    workflows: ["CI - Build and Push Docker Image"]
+    types:
+      - completed
+
+env:
+  IMAGE_NAME: ${{ secrets.SPRING_IMAGE }}
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download SHA artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: image-sha
+
+      - name: Read image tag
+        id: sha
+        run: echo "sha=$(cat image-sha.txt)" >> $GITHUB_OUTPUT
+
+      - name: Deploy to EC2 via SSH
+        uses: appleboy/ssh-action@v0.1.10
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ubuntu
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            docker pull $IMAGE_NAME:${{ steps.sha.outputs.sha }}
+            docker stop zerowaste-server || true
+            docker rm zerowaste-server || true
+            docker run -d \
+              --name zerowaste-app \
+              -p 8080:8080 \
+              -e MYSQL_URL="${{ secrets.MYSQL_URL }}" \
+              -e MYSQL_USERNAME="${{ secrets.MYSQL_USERNAME }}" \
+              -e MYSQL_PASSWORD="${{ secrets.MYSQL_PASSWORD }}" \
+              $IMAGE_NAME:${{ steps.sha.outputs.sha }}
