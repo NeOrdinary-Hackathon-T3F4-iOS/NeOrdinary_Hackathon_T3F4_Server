@@ -7,6 +7,7 @@ import com.t3f4.zerowaste.mission.dto.MemberMissionResponse;
 import com.t3f4.zerowaste.mission.dto.MissionStatDto;
 import com.t3f4.zerowaste.mission.service.MissionCommandService;
 import com.t3f4.zerowaste.mission.service.MissionService;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,6 +21,10 @@ public class MissionController {
     private final MissionService missionService;
     private final MissionCommandService missionCommandService;
 
+    @Operation(
+            summary = "미션 조회",
+            description = "미션 목록을 조회합니다."
+    )
     @GetMapping("/")
     public ApiResponse<List<MemberMissionResponse>> getMissions(@RequestParam("uuid") String userUuid) {
         List<MemberMissionResponse> response =  missionService.getMissions(userUuid);

@@ -21,7 +21,7 @@ public class MemberMissionResponse {
         Mission mission = memberMission.getMission();
 
         return MemberMissionResponse.builder()
-                .id(mission.getId())
+                .id(memberMission.getId())
                 .title(mission.getTitle())
                 .reward(mission.getReward())
                 .periodType(mission.getPeriodType())
