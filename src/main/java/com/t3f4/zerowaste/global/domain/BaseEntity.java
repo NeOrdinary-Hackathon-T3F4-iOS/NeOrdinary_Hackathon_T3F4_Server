@@ -1,4 +1,4 @@
-package com.t3f4.zerowaste.domain;
+package com.t3f4.zerowaste.global.domain;
 
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.MappedSuperclass;

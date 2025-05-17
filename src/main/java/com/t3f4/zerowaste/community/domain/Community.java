@@ -1,6 +1,6 @@
 package com.t3f4.zerowaste.community.domain;
 
-import com.t3f4.zerowaste.domain.BaseEntity;
+import com.t3f4.zerowaste.global.domain.BaseEntity;
 import com.t3f4.zerowaste.member.domain.Member;
 import jakarta.persistence.*;
 import lombok.*;
