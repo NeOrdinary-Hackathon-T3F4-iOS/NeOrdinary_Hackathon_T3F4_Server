@@ -18,9 +18,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Random;
 
 @Service
@@ -29,9 +27,7 @@ public class AvatarService {
 
     private final AvatarRepository avatarRepository;
     private final MemberRepository memberRepository;
-    private final MemberAvatarRepository memberAvatarRepository;
     private final GrothLevelRepository grothLevelRepository;
-    private final PointUseRepository pointUseRepository;
 
     private final Map<RewardType, Integer> rewardPointMap = Map.of(
             RewardType.SUN, 1,
@@ -39,31 +35,6 @@ public class AvatarService {
             RewardType.TIME, 5,
             RewardType.FERTILIZER, 8
     );
-
-    public AvatarResponse createAvatar(String uuid, AvatarCreateRequest request) {
-        Member member = (Member) memberRepository.findByUuid(uuid)
-                .orElseThrow(() -> new GeneralException(ErrorStatus._MEMBER_NOT_FOUND));
-
-        Avatar avatar = Avatar.builder()
-                .realName(request.getRealName())
-                .avatarType(request.getAvatarType())
-                .build();
-
-        avatarRepository.save(avatar);
-
-        MemberAvatar memberCharacter = MemberAvatar.builder()
-                .member(member)
-                .avatar(avatar)
-                .currentGroth(0)
-                .build();
-
-        memberAvatarRepository.save(memberCharacter);
-
-        GrothLevel grothLevel = (GrothLevel) grothLevelRepository.findTopByAvatarOrderByLevelDesc(avatar)
-                .orElseThrow(() -> new GeneralException(ErrorStatus._LEVEL_NOT_FOUND));
-
-        return AvatarResponse.from(avatar, grothLevel);
-    }
 
     @Transactional
     public GrothLevelResponse updateGrowthLevel(String memberUuid, Long avatarId, RewardType rewardType) {
@@ -124,6 +95,4 @@ public class AvatarService {
         return grownTypes[new Random().nextInt(grownTypes.length)];
     }
 
-//    public List<AvatarHistoryResponse> getAvatarHistory(String uuid) {
-//    }
 }
