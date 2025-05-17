@@ -1,7 +1,6 @@
 package com.t3f4.zerowaste.avatar.dto;
 
 import com.t3f4.zerowaste.avatar.domain.Avatar;
-import com.t3f4.zerowaste.avatar.domain.AvatarType;
 import com.t3f4.zerowaste.avatar.domain.GrothLevel;
 import lombok.*;
 
@@ -9,17 +8,13 @@ import lombok.*;
 @AllArgsConstructor
 public class AvatarResponse {
     private Long id;
-    private String hiddenName;
-    private String realName;
-    private AvatarType avatarType;
+    private String name;
     private GrothLevelResponse grothLevel; // 추가
 
     public static AvatarResponse from(Avatar avatar, GrothLevel grothLevel) {
         return new AvatarResponse(
                 avatar.getId(),
-                avatar.getHiddenName(),
-                avatar.getRealName(),
-                avatar.getAvatarType(),
+                avatar.getName(),
                 GrothLevelResponse.from(grothLevel)
         );
     }

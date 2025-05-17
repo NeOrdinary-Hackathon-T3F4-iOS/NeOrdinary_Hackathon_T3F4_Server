@@ -12,8 +12,8 @@ public class Avatar {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    private String hiddenName;
-    private String realName;
-    @Enumerated(EnumType.STRING)
-    private AvatarType avatarType;
+//    private String hiddenName;
+    private String name;
+//    @Enumerated(EnumType.STRING)
+//    private AvatarType avatarType;
 }

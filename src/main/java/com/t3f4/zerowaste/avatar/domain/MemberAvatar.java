@@ -14,7 +14,7 @@ public class MemberAvatar {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private int currentGroth;
-    private boolean revealed;
+//    private boolean revealed;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Member member;

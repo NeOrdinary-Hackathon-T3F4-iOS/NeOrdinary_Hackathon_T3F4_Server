@@ -11,7 +11,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AvatarCreateRequest {
-    private String hiddenName;
-    private String realName;
-    private AvatarType avatarType;
+    private String name;
 }
