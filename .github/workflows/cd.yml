@@ -11,6 +11,13 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Extract short SHA
+        id: vars
+        run: echo "sha=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+
+      - name: Print SHA value
+        run: echo "Short SHA is ${{ steps.vars.outputs.sha }}"
+
       - name: Download SHA artifact
         uses: actions/download-artifact@v4
         with:
