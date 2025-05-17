@@ -1,0 +1,8 @@
+spring:
+  application:
+    name: zerowaste
+
+
+logging:
+  level:
+    root: info
