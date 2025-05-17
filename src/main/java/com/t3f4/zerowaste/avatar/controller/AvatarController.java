@@ -3,6 +3,7 @@ package com.t3f4.zerowaste.avatar.controller;
 import com.t3f4.zerowaste.apipayload.ApiResponse;
 import com.t3f4.zerowaste.avatar.dto.AvatarCreateRequest;
 import com.t3f4.zerowaste.avatar.dto.AvatarResponse;
+import com.t3f4.zerowaste.avatar.dto.CountResponse;
 import com.t3f4.zerowaste.avatar.service.AvatarService;
 import com.t3f4.zerowaste.avatar.service.PointUseService;
 import com.t3f4.zerowaste.mission.domain.RewardType;
@@ -27,13 +28,12 @@ public class AvatarController {
             description = "현재 소유하고 있는 아이템의 개수를 셉니다."
     )
     @GetMapping("/count")
-    public ResponseEntity<ApiResponse<Map<String, Integer>>> getUseCount(
+    public ResponseEntity<ApiResponse<CountResponse>> getUseCount(
             @RequestParam String uuid,
             @RequestParam RewardType rewardType
     ) {
         int count = pointUseService.getUseCount(uuid, rewardType);
-        Map<String, Integer> result = Map.of("count", count);
-        return ResponseEntity.ok(ApiResponse.onSuccess(result));
+        return ResponseEntity.ok(ApiResponse.onSuccess(new CountResponse(count)));
     }
 
     @Operation(
