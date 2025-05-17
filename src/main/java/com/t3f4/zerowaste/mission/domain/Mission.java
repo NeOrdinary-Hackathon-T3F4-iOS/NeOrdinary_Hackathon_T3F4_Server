@@ -28,6 +28,4 @@ public class Mission extends BaseEntity {
 
     @OneToMany(mappedBy = "mission")
     private List<MemberMission> memberMissions = new ArrayList<>();
-
-    public void updateMiss
 }
