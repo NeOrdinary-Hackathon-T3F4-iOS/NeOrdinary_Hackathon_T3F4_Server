@@ -19,7 +19,8 @@ public class MemberMission {
     private Member member;
     @ManyToOne(fetch = FetchType.LAZY)
     private Mission mission;
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private MissionStatus status;
     private int count;
     private LocalDateTime completedAt;
 }

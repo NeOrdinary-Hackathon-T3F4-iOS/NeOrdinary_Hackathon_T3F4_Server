@@ -25,8 +25,6 @@ public class Mission extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private RewardType reward;
     @Enumerated(EnumType.STRING)
-    private MissionStatus status;
-    @Enumerated(EnumType.STRING)
     private PeriodType periodType;
 
     @OneToMany(mappedBy = "mission")

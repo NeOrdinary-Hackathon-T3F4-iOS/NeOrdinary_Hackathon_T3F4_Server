@@ -9,7 +9,4 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface MissionRepository extends JpaRepository<Mission, Long> {
-//    List<Mission> findByMember(Member member);
-    @Query("SELECT m FROM Mission m JOIN MemberMission mm ON mm.mission = m WHERE mm.member = :member")
-    List<Mission> findByMember(@Param("member") Member member);
 }
