@@ -18,7 +18,7 @@ public class MissionController {
     private final MissionService missionService;
 
     @GetMapping("/")
-    public ApiResponse<List<MemberMissionResponse>> getMissions(@RequestParam("uuId") String userUuid) {
+    public ApiResponse<List<MemberMissionResponse>> getMissions(@RequestParam("uuid") String userUuid) {
         List<MemberMissionResponse> response =  missionService.getMissions(userUuid);
         return ApiResponse.onSuccess(response);
     }
