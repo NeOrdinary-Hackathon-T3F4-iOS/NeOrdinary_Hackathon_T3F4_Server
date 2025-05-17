@@ -10,7 +10,7 @@ import lombok.Getter;
 public class GrothLevelResponse {
     private int level;
     private int requirement;
-    private GrothType label;
+    private String label;
 
     public static GrothLevelResponse from(GrothLevel grothLevel) {
         return new GrothLevelResponse(

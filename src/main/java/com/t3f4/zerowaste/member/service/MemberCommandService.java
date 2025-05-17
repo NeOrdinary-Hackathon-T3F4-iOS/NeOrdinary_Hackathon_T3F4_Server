@@ -44,7 +44,6 @@ public class MemberCommandService {
     private final MemberAvatarRepository memberAvatarRepository;
     private final GrothLevelRepository grothLevelRepository;
     private final MemberRepository memberRepository;
-    private final MissionRepository missionRepository;
     private final MemberMissionRepository memberMissionRepository;
 
     public void insertMember(String memberUuid) {
