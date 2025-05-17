@@ -3,6 +3,12 @@ package com.t3f4.zerowaste.mission.service;
 import com.t3f4.zerowaste.apipayload.exception.UnauthorizedException;
 import com.t3f4.zerowaste.mission.dto.MissionStatDto;
 import com.t3f4.zerowaste.mission.dto.MissionStatRepoDto;
+import com.t3f4.zerowaste.apipayload.exception.GeneralException;
+import com.t3f4.zerowaste.member.domain.Member;
+import com.t3f4.zerowaste.member.repository.MemberRepository;
+import com.t3f4.zerowaste.mission.domain.MemberMission;
+import com.t3f4.zerowaste.mission.domain.Mission;
+import com.t3f4.zerowaste.mission.dto.MemberMissionResponse;
 import com.t3f4.zerowaste.mission.repository.MemberMissionRepository;
 import com.t3f4.zerowaste.mission.repository.MissionRepository;
 import lombok.RequiredArgsConstructor;
@@ -35,5 +41,13 @@ public class MissionService {
                 .imageUrl(queryResult.stream().map(MissionStatRepoDto::getImageUrl)
                         .filter(Objects::nonNull).toList())
                 .build();
+    }
+
+    public List<MemberMissionResponse> getMissions(String userUuid) {
+        List<MemberMission> memberMissions = memberMissionRepository.findByMemberUuidWithMission(userUuid);
+
+        return memberMissions.stream()
+                .map(MemberMissionResponse::from)
+                .toList();
     }
 }
