@@ -2,24 +2,22 @@ package com.t3f4.zerowaste.avatar.service;
 
 import com.t3f4.zerowaste.apipayload.code.status.ErrorStatus;
 import com.t3f4.zerowaste.apipayload.exception.GeneralException;
-import com.t3f4.zerowaste.avatar.domain.*;
+import com.t3f4.zerowaste.avatar.domain.Avatar;
+import com.t3f4.zerowaste.avatar.domain.GrothLevel;
+import com.t3f4.zerowaste.avatar.domain.GrothType;
+import com.t3f4.zerowaste.avatar.domain.MemberAvatar;
 import com.t3f4.zerowaste.avatar.dto.AvatarCreateRequest;
 //import com.t3f4.zerowaste.avatar.dto.AvatarHistoryResponse;
 import com.t3f4.zerowaste.avatar.dto.AvatarResponse;
-import com.t3f4.zerowaste.avatar.dto.GrothLevelResponse;
 import com.t3f4.zerowaste.avatar.repository.AvatarRepository;
 import com.t3f4.zerowaste.avatar.repository.GrothLevelRepository;
 import com.t3f4.zerowaste.avatar.repository.MemberAvatarRepository;
-import com.t3f4.zerowaste.avatar.repository.PointUseRepository;
 import com.t3f4.zerowaste.member.domain.Member;
 import com.t3f4.zerowaste.member.repository.MemberRepository;
-import com.t3f4.zerowaste.mission.domain.RewardType;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.Map;
-import java.util.Random;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -27,72 +25,37 @@ public class AvatarService {
 
     private final AvatarRepository avatarRepository;
     private final MemberRepository memberRepository;
+    private final MemberAvatarRepository memberAvatarRepository;
     private final GrothLevelRepository grothLevelRepository;
 
-    private final Map<RewardType, Integer> rewardPointMap = Map.of(
-            RewardType.SUN, 1,
-            RewardType.POT, 3,
-            RewardType.TIME, 5,
-            RewardType.FERTILIZER, 8
-    );
-
-    @Transactional
-    public GrothLevelResponse updateGrowthLevel(String memberUuid, Long avatarId, RewardType rewardType) {
-        Member member = memberRepository.findByUuid(memberUuid)
+    public AvatarResponse createAvatar(String uuid, AvatarCreateRequest request) {
+        Member member = (Member) memberRepository.findByUuid(uuid)
                 .orElseThrow(() -> new GeneralException(ErrorStatus._MEMBER_NOT_FOUND));
 
-        Avatar avatar = avatarRepository.findById(avatarId)
-                .orElseThrow(() -> new GeneralException(ErrorStatus._AVATAR_NOT_FOUND));
+        Avatar avatar = Avatar.builder()
+                .realName(request.getRealName())
+                .build();
 
-        // 기존 성장 레벨 조회 or 새로 생성
-        GrothLevel grothLevel = grothLevelRepository.findByAvatar(avatar)
-                .orElseGet(() -> GrothLevel.builder()
-                        .avatar(avatar)
-                        .level(1)
-                        .requirement(0)
-                        .label(GrothType.SPROUT)
-                        .build());
+        avatarRepository.save(avatar);
 
-        // rewardType에 따른 포인트 획득
-        int rewardPoint = rewardPointMap.getOrDefault(rewardType, 0);
+        MemberAvatar memberCharacter = MemberAvatar.builder()
+                .member(member)
+                .avatar(avatar)
+                .currentGroth(0)
+                .build();
 
-        // 기존 requirement + 새로운 포인트 누적 (최대 100으로 제한)
-        int updatedRequirement = Math.min(grothLevel.getRequirement() + rewardPoint, 100);
+        memberAvatarRepository.save(memberCharacter);
 
-        // label 결정
-        GrothType newLabel = determineGrothType(updatedRequirement);
+        GrothLevel grothLevel = GrothLevel.builder()
+                .avatar(avatar)
+                .level(1)             // 초기 레벨
+                .requirement(0)       // 초기 요구치 (포인트)
+                .label(GrothType.SPROUT) // 초기 성장 단계
+                .build();
 
-        // label이 GROWN으로 변경됐고 avatarType이 아직 설정 안된 경우 랜덤 설정
-        if (newLabel == GrothType.GROWN && avatar.getAvatarType() == null) {
-            avatar.setAvatarType(getRandomGrownAvatarType());
-            avatarRepository.save(avatar);
-        }
-
-        // grothLevel 정보 업데이트
-        grothLevel.setRequirement(updatedRequirement);
-        grothLevel.setLabel(newLabel);
-        grothLevel.setLevel(determineLevelFromPoints(updatedRequirement));
-
-        grothLevel = grothLevelRepository.save(grothLevel);
-
-        return GrothLevelResponse.from(grothLevel);
+        return AvatarResponse.from(avatar, grothLevel);
     }
 
-    private GrothType determineGrothType(int points) {
-        if (points >= 100) return GrothType.GROWN;
-        else if (points >= 50) return GrothType.LEAVES;
-        else return GrothType.SPROUT;
-    }
-
-    private int determineLevelFromPoints(int points) {
-        if (points >= 100) return 3;
-        else if (points >= 50) return 2;
-        else return 1;
-    }
-
-    private AvatarType getRandomGrownAvatarType() {
-        AvatarType[] grownTypes = {AvatarType.SHAMPO, AvatarType.BODY, AvatarType.WASH};
-        return grownTypes[new Random().nextInt(grownTypes.length)];
-    }
-
+//    public List<AvatarHistoryResponse> getAvatarHistory(String uuid) {
+//    }
 }

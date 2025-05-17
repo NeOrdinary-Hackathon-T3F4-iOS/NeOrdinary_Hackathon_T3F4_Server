@@ -2,8 +2,16 @@ package com.t3f4.zerowaste.member.service;
 
 import com.t3f4.zerowaste.apipayload.code.status.ErrorStatus;
 import com.t3f4.zerowaste.apipayload.exception.GeneralException;
+import com.t3f4.zerowaste.avatar.domain.Avatar;
+import com.t3f4.zerowaste.avatar.domain.GrothLevel;
+import com.t3f4.zerowaste.avatar.domain.MemberAvatar;
+import com.t3f4.zerowaste.avatar.dto.AvatarResponse;
+import com.t3f4.zerowaste.avatar.repository.AvatarRepository;
+import com.t3f4.zerowaste.avatar.repository.GrothLevelRepository;
+import com.t3f4.zerowaste.avatar.repository.MemberAvatarRepository;
 import com.t3f4.zerowaste.member.MemberConverter;
 import com.t3f4.zerowaste.member.domain.Member;
+import com.t3f4.zerowaste.member.dto.FrontScreenDto;
 import com.t3f4.zerowaste.member.repository.MemberRepository;
 import com.t3f4.zerowaste.mission.domain.MemberMission;
 import com.t3f4.zerowaste.mission.domain.Mission;
@@ -13,15 +21,28 @@ import com.t3f4.zerowaste.mission.repository.MemberMissionRepository;
 import com.t3f4.zerowaste.mission.repository.MissionRepository;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.t3f4.zerowaste.mission.domain.RewardType;
+import com.t3f4.zerowaste.mission.dto.MissionSimpleCount;
+import com.t3f4.zerowaste.mission.dto.PointDto;
+import com.t3f4.zerowaste.mission.repository.PointRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 @Transactional
 public class MemberCommandService {
-
+    private final MemberMissionRepository missionRepository;
+    private final PointRepository pointRepository;
+    private final AvatarRepository avatarRepository;
+    private final MemberAvatarRepository memberAvatarRepository;
+    private final GrothLevelRepository grothLevelRepository;
     private final MemberRepository memberRepository;
     private final MissionRepository missionRepository;
     private final MemberMissionRepository memberMissionRepository;
@@ -68,5 +89,58 @@ public class MemberCommandService {
             .count(0)
             .completedAt(null)
             .build();
+    }
+
+    public FrontScreenDto getFrontScreen(String memberUuid) {
+        if (memberUuid == null || memberUuid.isBlank() || memberRepository.findByUuid(memberUuid).isEmpty())
+            throw new GeneralException(ErrorStatus._MEMBER_NOT_FOUND);
+        List<MissionSimpleCount> totalMission = missionRepository.findTotalMissionCountByPeriod(memberUuid);
+        System.out.println(totalMission);
+        List<MissionSimpleCount> completedMission = missionRepository.findCompletedMissionCountByPeriod(memberUuid);
+        System.out.println(completedMission);
+//        List<PointDto> pointCollected = pointRepository.findPointByUuid(memberUuid);
+//        System.out.println(pointCollected);
+        List<PointDto> pointUsed = pointRepository.findPointUseByUuid(memberUuid);
+        System.out.println(pointUsed);
+        Optional<MemberAvatar> memberAvatar = memberAvatarRepository.getAvatar(memberUuid);
+        if (memberAvatar.isEmpty()) throw new GeneralException(ErrorStatus._MEMBER_NOT_FOUND);
+        MemberAvatar memberAvatarGet = memberAvatar.get();
+        Avatar avatar = memberAvatarGet.getAvatar();
+        int grothStep = determineLevelFromPoints(memberAvatarGet.getCurrentGroth());
+        Optional<GrothLevel> grothLevelOptional = grothLevelRepository.findByLevelAndAvatar(grothStep, avatar);
+        if (grothLevelOptional.isEmpty()) throw new GeneralException(ErrorStatus._MEMBER_NOT_FOUND);
+        GrothLevel grothLevel = grothLevelOptional.get();
+        Map<PeriodType, Long> currentMissionsStat = new HashMap<>();
+        Map<PeriodType, Long> totalMissionsStat = new HashMap<>();
+        for (MissionSimpleCount mission : totalMission)
+            totalMissionsStat.put(mission.getPeriodType(), mission.getMissionCount());
+        for (MissionSimpleCount mission : completedMission)
+            currentMissionsStat.put(mission.getPeriodType(), mission.getMissionCount());
+        Map<RewardType, Long> rewardsStat = new HashMap<>();
+//        for (PointDto point : pointCollected)
+//            rewardsStat.put(point.getRewardType(), point.getAmount());
+//        for (PointDto point : pointUsed)
+//            rewardsStat.put(point.getRewardType(), rewardsStat.getOrDefault
+//                    (point.getRewardType(), 0L) - point.getAmount());
+        for (PointDto point : pointUsed)
+            rewardsStat.put(point.getRewardType(), point.getAmount());
+        return FrontScreenDto.builder()
+                .sun(rewardsStat.getOrDefault(RewardType.SUN, 0L))
+                .pot(rewardsStat.getOrDefault(RewardType.POT, 0L))
+                .time(rewardsStat.getOrDefault(RewardType.TIME, 0L))
+                .fertilizer(rewardsStat.getOrDefault(RewardType.FERTILIZER, 0L))
+                .currentGroth(memberAvatarGet.getCurrentGroth())
+                .avatarData(AvatarResponse.from(avatar, grothLevel))
+                .daily_total(totalMissionsStat.getOrDefault(PeriodType.DAILY, 0L))
+                .daily_current(currentMissionsStat.getOrDefault(PeriodType.DAILY, 0L))
+                .weekly_total(totalMissionsStat.getOrDefault(PeriodType.WEEKLY, 0L))
+                .weekly_current(currentMissionsStat.getOrDefault(PeriodType.WEEKLY, 0L))
+                .build();
+    }
+
+    private int determineLevelFromPoints(int points) {
+        if (points >= 100) return 3;
+        else if (points >= 50) return 2;
+        else return 1;
     }
 }
