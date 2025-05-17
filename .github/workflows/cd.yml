@@ -28,13 +28,27 @@ jobs:
           username: ubuntu
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            sudo docker pull $IMAGE_NAME:${{ steps.vars.outputs.sha }}
-            sudo docker stop zerowaste-app || true
-            sudo docker rm zerowaste-app || true
+            IMAGE_TAG="${IMAGE_NAME}:${{ steps.vars.outputs.sha }}"
+            IMAGE_TAG=$(echo "$IMAGE_TAG" | xargs)  # 공백 제거
+
+            echo "Deploying image: $IMAGE_TAG"
+
+            # 실행 중인 컨테이너 있으면 중지
+            if sudo docker ps -q -f name=zerowaste-server | grep -q .; then
+              sudo docker stop zerowaste-server
+            fi
+
+            # 존재하는 컨테이너 있으면 삭제
+            if sudo docker ps -a -q -f name=zerowaste-server | grep -q .; then
+              sudo docker rm zerowaste-server
+            fi
+
+            sudo docker pull "$IMAGE_TAG"
+
             sudo docker run -d \
-              --name zerowaste-app \
+              --name zerowaste-server \
               -p 8080:8080 \
               -e MYSQL_URL="${{ secrets.MYSQL_URL }}" \
               -e MYSQL_USERNAME="${{ secrets.MYSQL_USERNAME }}" \
               -e MYSQL_PASSWORD="${{ secrets.MYSQL_PASSWORD }}" \
-              $IMAGE_NAME:${{ steps.vars.outputs.sha }}
+              "$IMAGE_TAG"
