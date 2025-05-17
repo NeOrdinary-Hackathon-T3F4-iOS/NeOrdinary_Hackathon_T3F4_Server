@@ -30,7 +30,11 @@ public class MissionController {
         List<MemberMissionResponse> response =  missionService.getMissions(userUuid);
         return ApiResponse.onSuccess(response);
     }
-  
+
+    @Operation(
+            summary = "미션 수행 상태 보기",
+            description = "미션 수행 상태를 조회합니다."
+    )
     @GetMapping("/{id}")
     public ApiResponse<MissionStatDto> getMissionStatus(@PathVariable("id") Long id,
                                                         @RequestParam("uuid") String uuid) {
@@ -39,6 +43,10 @@ public class MissionController {
         return ApiResponse.onSuccess(missionService.getMissionStat(id, uuid));
     }
 
+    @Operation(
+            summary = "미션 인증",
+            description = "미션 인증 사진을 업로드합니다."
+    )
     @PostMapping("/{missionId}/progress/{memberUuid}")
     public ApiResponse<Void> uploadMissionImage(
         @PathVariable Long missionId,
