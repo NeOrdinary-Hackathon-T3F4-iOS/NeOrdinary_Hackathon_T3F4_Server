@@ -19,6 +19,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
+import static com.t3f4.zerowaste.avatar.domain.GrothType.SPROUT;
+
 //@Component
 public class DBTestdataConfig {
     DBTestdataConfig(MemberRepository memberRepository,
@@ -100,11 +102,17 @@ public class DBTestdataConfig {
         GrothLevel grothLevel = GrothLevel.builder()
                 .level(1)
                 .requirement(0)
-                .label("새싹")
+                .label(SPROUT)
                 .avatar(avatar)
                 .build();
         grothLevelRepository.save(grothLevel);
 
+        PointUse point1 = PointUse.builder().member(member).rewardType(RewardType.SUN).build();  // 20
+        PointUse point2 = PointUse.builder().member(member).rewardType(RewardType.SUN).build();  // 20
+        PointUse point3 = PointUse.builder().member(member).rewardType(RewardType.POT).build();  // 10
+        PointUse point4 = PointUse.builder().member(member).rewardType(RewardType.POT).build(); // 5
+        PointUse point5 = PointUse.builder().member(member).rewardType(RewardType.POT).build(); // 5
+        pointUseRepository.saveAll(List.of(point1, point2, point3, point4, point5));
         // PointUse 더미 데이터 생성 (2개)
         PointUse pointUse1 = PointUse.builder()
                 .member(member)

@@ -5,6 +5,7 @@ import lombok.*;
 
 @Entity
 @Getter
+@Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder
@@ -14,7 +15,8 @@ public class GrothLevel {
     private long id;
     private int level;
     private int requirement;
-    private String label;
+    @Enumerated(EnumType.STRING)
+    private GrothType label;
     @ManyToOne(fetch = FetchType.LAZY)
     private Avatar avatar;
 }
