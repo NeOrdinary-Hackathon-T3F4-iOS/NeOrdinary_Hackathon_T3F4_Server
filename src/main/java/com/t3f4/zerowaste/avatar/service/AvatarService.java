@@ -39,15 +39,6 @@ public class AvatarService {
 
         avatarRepository.save(avatar);
 
-        GrothLevel grothLevel = GrothLevel.builder()
-                .level(1)
-                .requirement(0)
-                .label("새싹")
-                .imageUrl("https://example.com/seedling.png")
-                .avatar(avatar)
-                .build();
-        grothLevelRepository.save(grothLevel);
-
         MemberAvatar memberCharacter = MemberAvatar.builder()
                 .member(member)
                 .avatar(avatar)
@@ -56,6 +47,9 @@ public class AvatarService {
                 .build();
 
         memberAvatarRepository.save(memberCharacter);
+
+        GrothLevel grothLevel = (GrothLevel) grothLevelRepository.findTopByAvatarOrderByLevelDesc(avatar)
+                .orElseThrow(() -> new GeneralException(ErrorStatus._LEVEL_NOT_FOUND));
 
         return AvatarResponse.from(avatar, grothLevel);
     }
