@@ -26,10 +26,22 @@ public interface MemberMissionRepository extends JpaRepository<MemberMission, Lo
     SELECT mm FROM MemberMission mm
     JOIN FETCH mm.mission m
     WHERE mm.member.uuid = :uuid
-""")
+    """)
     List<MemberMission> findByMemberUuidWithMission(@Param("uuid") String uuid);
 
     @Query("SELECT mm FROM MemberMission mm WHERE mm.member.id = :memberId AND mm.mission.id = :missionId")
     Optional<MemberMission> findByMemberIdAndMissionId(@Param("memberId") Long memberId, @Param("missionId") Long missionId);
+
+    @Query("SELECT mm.mission.id FROM MemberMission mm WHERE mm.member.id = :memberId AND mm.mission.periodType = :periodType")
+    List<Long> findMissionIdsByMemberAndPeriodType(@Param("memberId") Long memberId, @Param("periodType") String periodType);
+
+    @Query("""
+    SELECT mm.member.id, mm.mission.id 
+    FROM MemberMission mm 
+    WHERE mm.member.id IN :memberIds 
+      AND mm.mission.periodType = :periodType
+    """)
+    List<Object[]> findMissionIdsByMembersAndPeriodType(@Param("memberIds") List<Long> memberIds,
+        @Param("periodType") String periodType);
 
 }

@@ -14,4 +14,18 @@ public interface MissionRepository extends JpaRepository<Mission, Long> {
     @Query(value = "SELECT * FROM mission WHERE period_type = :periodType ORDER BY RAND() LIMIT :limit", nativeQuery = true)
     List<Mission> findRandomMissionsByPeriodType(@Param("periodType") String periodType, @Param("limit") int limit);
 
+    @Query(value = """
+        SELECT * FROM mission 
+        WHERE period_type = :periodType 
+        AND id NOT IN (:excludeIds)
+        ORDER BY RAND()
+        LIMIT :count
+        """, nativeQuery = true)
+    List<Mission> findRandomMissionsExcluding(
+        @Param("periodType") String periodType,
+        @Param("excludeIds") List<Long> excludeIds,
+        @Param("count") int count
+    );
+
+    List<Mission> findByPeriodType(PeriodType periodType);
 }
