@@ -29,4 +29,15 @@ public class MemberMission {
     @OneToMany(mappedBy = "memberMission")
     private List<Photo> photos;
 
+    public void incrementCount() {
+        this.count++;
+    }
+
+    public void updateMissionStatus(MissionStatus status) {
+        this.status = status;
+    }
+
+    public void updateMissionCompletedAt(LocalDateTime completedAt) {
+        this.completedAt = completedAt;
+    }
 }
