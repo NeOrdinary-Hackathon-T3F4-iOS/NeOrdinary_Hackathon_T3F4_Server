@@ -48,16 +48,18 @@ jobs:
 
       - name: Deploy to EC2 via SSH
         uses: appleboy/ssh-action@v0.1.10
-        env:
-          IMAGE_NAME: ${{ secrets.SPRING_IMAGE }}
-          MYSQL_URL: ${{ secrets.MYSQL_URL }}
-          MYSQL_USERNAME: ${{ secrets.MYSQL_USERNAME }}
-          MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ubuntu
           key: ${{ secrets.EC2_SSH_KEY }}
+          env: |
+            IMAGE_NAME=${{ secrets.SPRING_IMAGE }}
+            MYSQL_URL=${{ secrets.MYSQL_URL }}
+            MYSQL_USERNAME=${{ secrets.MYSQL_USERNAME }}
+            MYSQL_PASSWORD=${{ secrets.MYSQL_PASSWORD }}
           script: |
+            echo "IMAGE_NAME is '$IMAGE_NAME'"
+
             IMAGE_TAG="${IMAGE_NAME}:${{ steps.vars.outputs.sha }}"
             IMAGE_TAG=$(echo "$IMAGE_TAG" | xargs)
 
