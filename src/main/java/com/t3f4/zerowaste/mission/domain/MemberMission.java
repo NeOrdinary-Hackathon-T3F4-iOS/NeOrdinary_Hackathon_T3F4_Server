@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Getter
@@ -19,7 +20,13 @@ public class MemberMission {
     private Member member;
     @ManyToOne(fetch = FetchType.LAZY)
     private Mission mission;
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private MissionStatus status;
     private int count;
     private LocalDateTime completedAt;
+
+    @Setter
+    @OneToMany(mappedBy = "memberMission")
+    private List<Photo> photos;
+
 }
