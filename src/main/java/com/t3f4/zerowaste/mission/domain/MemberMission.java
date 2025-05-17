@@ -1,0 +1,25 @@
+package com.t3f4.zerowaste.mission.domain;
+
+import com.t3f4.zerowaste.member.domain.Member;
+import jakarta.persistence.*;
+import lombok.*;
+
+import java.time.LocalDateTime;
+
+@Entity
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PROTECTED)
+@Builder
+public class MemberMission {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Member member;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Mission mission;
+    private String status;
+    private int count;
+    private LocalDateTime completedAt;
+}

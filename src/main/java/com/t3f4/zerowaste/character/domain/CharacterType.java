@@ -1,7 +1,8 @@
-package com.t3f4.zerowaste.domain;
+package com.t3f4.zerowaste.character.domain;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.*;
 
@@ -10,10 +11,9 @@ import lombok.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder
-public class Member extends BaseEntity {
+public class CharacterType {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    private String name;
-    private String status;
+    private String typeName;
 }
