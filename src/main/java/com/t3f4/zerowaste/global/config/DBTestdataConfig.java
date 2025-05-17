@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
-@Component
+//@Component
 public class DBTestdataConfig {
     DBTestdataConfig(MemberRepository memberRepository,
                      MissionRepository missionRepository,
