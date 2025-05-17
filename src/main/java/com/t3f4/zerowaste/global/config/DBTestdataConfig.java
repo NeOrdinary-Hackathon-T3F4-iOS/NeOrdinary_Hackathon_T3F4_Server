@@ -2,8 +2,10 @@ package com.t3f4.zerowaste.global.config;
 
 import com.t3f4.zerowaste.avatar.domain.Avatar;
 import com.t3f4.zerowaste.avatar.domain.GrothLevel;
+import com.t3f4.zerowaste.avatar.domain.PointUse;
 import com.t3f4.zerowaste.avatar.repository.AvatarRepository;
 import com.t3f4.zerowaste.avatar.repository.GrothLevelRepository;
+import com.t3f4.zerowaste.avatar.repository.PointUseRepository;
 import com.t3f4.zerowaste.member.domain.Member;
 import com.t3f4.zerowaste.member.repository.MemberRepository;
 import com.t3f4.zerowaste.mission.domain.*;
@@ -17,14 +19,15 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
-//@Component
+@Component
 public class DBTestdataConfig {
     DBTestdataConfig(MemberRepository memberRepository,
                      MissionRepository missionRepository,
                      MemberMissionRepository memberMissionRepository,
                      PhotoRepository photoRepository,
                      AvatarRepository avatarRepository,
-                     GrothLevelRepository grothLevelRepository) {
+                     GrothLevelRepository grothLevelRepository,
+                     PointUseRepository pointUseRepository) {
         // Member 생성
         Member member = Member.builder()
                 .uuid(UUID.randomUUID().toString())
@@ -102,6 +105,19 @@ public class DBTestdataConfig {
                 .build();
         grothLevelRepository.save(grothLevel);
 
+        // PointUse 더미 데이터 생성 (2개)
+        PointUse pointUse1 = PointUse.builder()
+                .member(member)
+                .rewardType(RewardType.SUN)
+                .build();
+
+        PointUse pointUse2 = PointUse.builder()
+                .member(member)
+                .rewardType(RewardType.SUN)
+                .build();
+        pointUseRepository.saveAll(List.of(pointUse1, pointUse2));
+        System.out.println("Saved PointUse 1 ID: " + pointUse1.getId());
+        System.out.println("Saved PointUse 2 ID: " + pointUse2.getId());
         System.out.println("Saved Avatar ID: " + avatar.getId());
         System.out.println("Saved GrothLevel ID: " + grothLevel.getId());
         System.out.println("Saved MemberMission1 ID: " + memberMission1.getId());
