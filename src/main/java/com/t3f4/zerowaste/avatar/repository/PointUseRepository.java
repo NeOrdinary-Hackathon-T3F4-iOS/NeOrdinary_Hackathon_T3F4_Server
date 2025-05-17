@@ -11,7 +11,5 @@ import java.util.Optional;
 public interface PointUseRepository extends JpaRepository<PointUse, Long> {
     int countByMemberAndRewardType(Member member, RewardType rewardType);
 
-    List<PointUse> findAllByMember(Member member);
-
     Optional<Object> findFirstByMemberAndRewardType(Member member, RewardType rewardType);
 }

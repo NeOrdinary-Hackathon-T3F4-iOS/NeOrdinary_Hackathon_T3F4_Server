@@ -12,5 +12,4 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class AvatarCreateRequest {
     private String realName;
-    private AvatarType avatarType;
 }

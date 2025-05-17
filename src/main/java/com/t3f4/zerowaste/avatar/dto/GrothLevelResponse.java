@@ -1,7 +1,5 @@
 package com.t3f4.zerowaste.avatar.dto;
 
-import com.t3f4.zerowaste.avatar.domain.Avatar;
-import com.t3f4.zerowaste.avatar.domain.AvatarType;
 import com.t3f4.zerowaste.avatar.domain.GrothLevel;
 import com.t3f4.zerowaste.avatar.domain.GrothType;
 import lombok.AllArgsConstructor;

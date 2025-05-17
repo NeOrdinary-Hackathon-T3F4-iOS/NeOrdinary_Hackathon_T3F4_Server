@@ -5,6 +5,7 @@ import com.t3f4.zerowaste.avatar.dto.GrothLevelResponse;
 import com.t3f4.zerowaste.avatar.service.AvatarService;
 import com.t3f4.zerowaste.avatar.service.PointUseService;
 import com.t3f4.zerowaste.mission.domain.RewardType;
+import jdk.jfr.Description;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,6 +21,7 @@ public class GrowthLevelController {
     private final AvatarService avatarService;
     private final PointUseService pointUseService;
 
+    @Description("아이템을 사용합니다.")
     @PostMapping("/update")
     public ResponseEntity<ApiResponse<GrothLevelResponse>> updateGrowthLevel(
             @RequestParam String uuid,
