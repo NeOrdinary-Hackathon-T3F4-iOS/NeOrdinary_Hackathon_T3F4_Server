@@ -1,4 +1,4 @@
-package com.t3f4.zerowaste.character.domain;
+package com.t3f4.zerowaste.avatar.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -14,6 +14,6 @@ public class Avatar {
     private long id;
     private String hiddenName;
     private String realName;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @Enumerated(EnumType.STRING)
     private AvatarType avatarType;
 }

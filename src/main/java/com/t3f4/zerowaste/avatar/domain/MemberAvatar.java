@@ -1,5 +1,6 @@
-package com.t3f4.zerowaste.character.domain;
+package com.t3f4.zerowaste.avatar.domain;
 
+import com.t3f4.zerowaste.member.domain.Member;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -8,14 +9,15 @@ import lombok.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder
-public class GrothLevel {
+public class MemberAvatar {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    private int level;
-    private int requirement;
-    private String label;
-    private String imageUrl;
+    private int currentGroth;
+    private boolean revealed;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Member member;
     @ManyToOne(fetch = FetchType.LAZY)
     private Avatar avatar;
 }
