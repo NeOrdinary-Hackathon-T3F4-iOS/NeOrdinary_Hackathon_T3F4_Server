@@ -1,4 +1,4 @@
-package com.t3f4.zerowaste.controller.dto;
+package com.t3f4.zerowaste.member.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

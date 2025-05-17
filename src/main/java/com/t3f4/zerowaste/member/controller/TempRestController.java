@@ -1,4 +1,4 @@
-package com.t3f4.zerowaste.controller;
+package com.t3f4.zerowaste.member.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.RequestMapping;
