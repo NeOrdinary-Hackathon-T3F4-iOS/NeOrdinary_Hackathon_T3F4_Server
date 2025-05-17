@@ -6,30 +6,34 @@ on:
     types:
       - completed
 
-env:
-  IMAGE_NAME: ${{ secrets.SPRING_IMAGE }}
-
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code (to get git info)
-        uses: actions/checkout@v3
+      - name: Download SHA artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: image-sha
 
-      - name: Extract short SHA
-        id: vars
-        run: echo "sha=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+      - name: Read image tag from artifact
+        id: sha
+        run: echo "sha=$(cat image-sha.txt)" >> $GITHUB_OUTPUT
 
       - name: Deploy to EC2 via SSH
         uses: appleboy/ssh-action@v0.1.10
+        env:
+          IMAGE_NAME: ${{ secrets.SPRING_IMAGE }}
+          MYSQL_URL: ${{ secrets.MYSQL_URL }}
+          MYSQL_USERNAME: ${{ secrets.MYSQL_USERNAME }}
+          MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ubuntu
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            IMAGE_TAG="${IMAGE_NAME}:${{ steps.vars.outputs.sha }}"
-            IMAGE_TAG=$(echo "$IMAGE_TAG" | xargs)  # 공백 제거
+            IMAGE_TAG="${IMAGE_NAME}:${{ steps.sha.outputs.sha }}"
+            IMAGE_TAG=$(echo "$IMAGE_TAG" | xargs)
 
             echo "Deploying image: $IMAGE_TAG"
 
@@ -48,7 +52,7 @@ jobs:
             sudo docker run -d \
               --name zerowaste-server \
               -p 8080:8080 \
-              -e MYSQL_URL="${{ secrets.MYSQL_URL }}" \
-              -e MYSQL_USERNAME="${{ secrets.MYSQL_USERNAME }}" \
-              -e MYSQL_PASSWORD="${{ secrets.MYSQL_PASSWORD }}" \
+              -e MYSQL_URL="${MYSQL_URL}" \
+              -e MYSQL_USERNAME="${MYSQL_USERNAME}" \
+              -e MYSQL_PASSWORD="${MYSQL_PASSWORD}" \
               "$IMAGE_TAG"

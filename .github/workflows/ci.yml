@@ -46,5 +46,11 @@ jobs:
           docker build -t $IMAGE_NAME:${{ steps.vars.outputs.sha }} .
           docker push $IMAGE_NAME:${{ steps.vars.outputs.sha }}
 
-      - name: Output SHA
-        run: echo "Docker image pushed with tag ${{ steps.vars.outputs.sha }}"
+      - name: Save SHA to artifact
+        run: echo "${{ steps.vars.outputs.sha }}" > image-sha.txt
+
+      - name: Upload image SHA artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: image-sha
+          path: image-sha.txt
