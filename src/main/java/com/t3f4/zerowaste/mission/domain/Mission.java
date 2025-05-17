@@ -4,9 +4,12 @@ import com.t3f4.zerowaste.global.domain.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Entity
+@Table(name = "mission")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
@@ -16,10 +19,16 @@ public class Mission extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private String title;
-    private String content;
     private int count;
-    private int reward;
-    private Date deadline;
+    private String content;
+
     @Enumerated(EnumType.STRING)
-    private PeriodType period_type;
+    private RewardType reward;
+    @Enumerated(EnumType.STRING)
+    private MissionStatus status;
+    @Enumerated(EnumType.STRING)
+    private PeriodType periodType;
+
+    @OneToMany(mappedBy = "mission")
+    private List<MemberMission> memberMissions = new ArrayList<>();
 }
