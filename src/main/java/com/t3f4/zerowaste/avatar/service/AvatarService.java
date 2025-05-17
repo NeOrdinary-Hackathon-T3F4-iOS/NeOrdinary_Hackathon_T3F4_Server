@@ -32,7 +32,6 @@ public class AvatarService {
                 .orElseThrow(() -> new GeneralException(ErrorStatus._MEMBER_NOT_FOUND));
 
         Avatar avatar = Avatar.builder()
-                .hiddenName(request.getHiddenName())
                 .realName(request.getRealName())
                 .avatarType(request.getAvatarType())
                 .build();
@@ -43,7 +42,6 @@ public class AvatarService {
                 .member(member)
                 .avatar(avatar)
                 .currentGroth(0)
-                .revealed(false)
                 .build();
 
         memberAvatarRepository.save(memberCharacter);

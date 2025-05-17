@@ -89,9 +89,8 @@ public class DBTestdataConfig {
 
         // Avatar 생성
         Avatar avatar = Avatar.builder()
-                .hiddenName("히든네임")
                 .realName("리얼네임")
-                .avatarType(AvatarType.SEED) // enum 값 사용
+                .avatarType(AvatarType.SHAMPO) // enum 값 사용
                 .build();
         avatar = avatarRepository.save(avatar);
         // GrothLevel 생성
@@ -99,7 +98,6 @@ public class DBTestdataConfig {
                 .level(1)
                 .requirement(0)
                 .label("새싹")
-                .imageUrl("https://example.com/seedling.png")
                 .avatar(avatar)
                 .build();
         grothLevelRepository.save(grothLevel);

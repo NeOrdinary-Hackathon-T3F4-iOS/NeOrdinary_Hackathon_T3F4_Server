@@ -15,7 +15,6 @@ public class GrothLevel {
     private int level;
     private int requirement;
     private String label;
-    private String imageUrl;
     @ManyToOne(fetch = FetchType.LAZY)
     private Avatar avatar;
 }

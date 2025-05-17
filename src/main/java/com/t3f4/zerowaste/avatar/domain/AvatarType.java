@@ -6,8 +6,9 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum AvatarType {
-    SEED("씨앗"),
-    FLOWER("꽃");
+    SHAMPO("샴푸바"),
+    BODY("바디바"),
+    WASH("설거지바");
 
     private final String label;
 }
