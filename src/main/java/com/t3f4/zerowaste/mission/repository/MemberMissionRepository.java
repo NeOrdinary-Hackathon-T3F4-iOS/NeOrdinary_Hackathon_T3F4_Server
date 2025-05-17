@@ -1,6 +1,7 @@
 package com.t3f4.zerowaste.mission.repository;
 
 import com.t3f4.zerowaste.mission.domain.MemberMission;
+import com.t3f4.zerowaste.mission.dto.MissionSimpleCount;
 import com.t3f4.zerowaste.mission.dto.MissionStatRepoDto;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -31,5 +32,21 @@ public interface MemberMissionRepository extends JpaRepository<MemberMission, Lo
 
     @Query("SELECT mm FROM MemberMission mm WHERE mm.member.id = :memberId AND mm.mission.id = :missionId")
     Optional<MemberMission> findByMemberIdAndMissionId(@Param("memberId") Long memberId, @Param("missionId") Long missionId);
+
+
+    // 1. 전체 미션 수 (periodType 기준)
+    @Query("select new com.t3f4.zerowaste.mission.dto.MissionSimpleCount(mi.periodType, count(mm)) " +
+            "from MemberMission mm join mm.member m join mm.mission mi " +
+            "where m.uuid = :uuid " +
+            "group by mi.periodType")
+    List<MissionSimpleCount> findTotalMissionCountByPeriod(@Param("uuid") String uuid);
+
+    // 2. 완료된 미션 수만 별도로 조회
+    @Query("select new com.t3f4.zerowaste.mission.dto.MissionSimpleCount(mi.periodType, count(mm)) " +
+            "from MemberMission mm join mm.member m join mm.mission mi " +
+            "where m.uuid = :uuid and (mm.status = com.t3f4.zerowaste.mission.domain.MissionStatus.COMPLETED " +
+            "or mm.status = com.t3f4.zerowaste.mission.domain.MissionStatus.GET_REWARDS) " +
+            "group by mi.periodType")
+    List<MissionSimpleCount> findCompletedMissionCountByPeriod(@Param("uuid") String uuid);
 
 }

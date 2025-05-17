@@ -12,8 +12,8 @@ import com.t3f4.zerowaste.mission.domain.*;
 import com.t3f4.zerowaste.mission.repository.MemberMissionRepository;
 import com.t3f4.zerowaste.mission.repository.MissionRepository;
 import com.t3f4.zerowaste.mission.repository.PhotoRepository;
-import com.t3f4.zerowaste.avatar.domain.AvatarType;
 import org.springframework.stereotype.Component;
+import com.t3f4.zerowaste.avatar.domain.AvatarType;
 
 import java.time.LocalDateTime;
 import java.util.List;
