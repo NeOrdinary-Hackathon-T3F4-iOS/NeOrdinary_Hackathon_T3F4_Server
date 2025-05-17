@@ -47,13 +47,13 @@ public class MissionController {
             summary = "미션 인증",
             description = "미션 인증 사진을 업로드합니다."
     )
-    @PostMapping("/{missionId}/progress/{memberUuid}")
+    @PostMapping("/{memberMissionId}/progress/{memberUuid}")
     public ApiResponse<Void> uploadMissionImage(
-        @PathVariable Long missionId,
+        @PathVariable Long memberMissionId,
         @PathVariable String memberUuid,
         @RequestPart("file") MultipartFile file
     ) {
-        missionCommandService.uploadMissionImage(missionId, memberUuid, file);
+        missionCommandService.uploadMissionImage(memberMissionId, memberUuid, file);
         return ApiResponse.onSuccess(null);
     }
 }
