@@ -16,7 +16,7 @@ public class GrothLevelResponse {
         return new GrothLevelResponse(
                 grothLevel.getLevel(),
                 grothLevel.getRequirement(),
-                grothLevel.getLabel()
+                grothLevel.getLabel().toString()
         );
     }
 }
