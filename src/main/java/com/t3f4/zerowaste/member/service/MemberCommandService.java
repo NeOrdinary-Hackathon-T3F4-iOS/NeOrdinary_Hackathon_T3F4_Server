@@ -31,6 +31,12 @@ public class MemberCommandService {
             throw new GeneralException(ErrorStatus._BAD_REQUEST);
         }
 
+        boolean isExists = memberRepository.findByUuid(memberUuid).isPresent();
+
+        if (isExists) {
+            throw new GeneralException(ErrorStatus._BAD_REQUEST);
+        }
+
         Member member = MemberConverter.mapToMember(memberUuid);
         memberRepository.save(member);
 
