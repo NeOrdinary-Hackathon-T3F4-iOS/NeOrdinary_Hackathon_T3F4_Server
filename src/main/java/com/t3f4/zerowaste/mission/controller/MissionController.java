@@ -9,6 +9,7 @@ import com.t3f4.zerowaste.mission.service.MissionCommandService;
 import com.t3f4.zerowaste.mission.service.MissionService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -55,5 +56,15 @@ public class MissionController {
     ) {
         missionCommandService.uploadMissionImage(memberMissionId, memberUuid, file);
         return ApiResponse.onSuccess(null);
+    }
+
+    @Operation(summary = "미션 보상 지급", description = "GET_REWARDS 상태인 미션들을 COMPLETED로 변경하고 보상 아이템을 지급합니다.")
+    @PostMapping("/missions/rewards")
+    public ResponseEntity<ApiResponse<String>> rewardMissions(
+            @RequestParam String uuid,
+            @RequestParam Long memberMissionId
+    ) {
+        missionService.completeMissionAndGiveReward(uuid, memberMissionId);
+        return ResponseEntity.ok(ApiResponse.onSuccess("보상이 지급되었습니다."));
     }
 }

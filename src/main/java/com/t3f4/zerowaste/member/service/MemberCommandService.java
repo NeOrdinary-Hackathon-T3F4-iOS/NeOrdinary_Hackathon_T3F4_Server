@@ -61,10 +61,10 @@ public class MemberCommandService {
         memberRepository.save(member);
 
         // 1. 주간 미션 4개 조회
-        List<Mission> weeklyMissions = missionRepository.findRandomMissionsByPeriodType(PeriodType.WEEKLY.name(), 4);
+        List<Mission> weeklyMissions = missionRepository.findRandomMissionsByPeriodType(PeriodType.WEEKLY, 4);
 
         // 2. 일간 미션 2개 조회
-        List<Mission> dailyMissions = missionRepository.findRandomMissionsByPeriodType(PeriodType.DAILY.name(), 2);
+        List<Mission> dailyMissions = missionRepository.findRandomMissionsByPeriodType(PeriodType.DAILY, 2);
 
 
         // 3. MemberMission 생성

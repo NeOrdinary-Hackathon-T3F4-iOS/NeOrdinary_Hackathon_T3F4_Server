@@ -1,7 +1,10 @@
 package com.t3f4.zerowaste.mission.repository;
 
+import com.t3f4.zerowaste.member.domain.Member;
 import com.t3f4.zerowaste.mission.domain.MemberMission;
 import com.t3f4.zerowaste.mission.domain.Mission;
+import com.t3f4.zerowaste.mission.domain.MissionStatus;
+import com.t3f4.zerowaste.mission.domain.PeriodType;
 import com.t3f4.zerowaste.mission.dto.MissionSimpleCount;
 import com.t3f4.zerowaste.mission.dto.MissionStatRepoDto;
 import org.springframework.data.jpa.repository.EntityGraph;
@@ -61,6 +64,7 @@ public interface MemberMissionRepository extends JpaRepository<MemberMission, Lo
             "group by mi.periodType")
     List<MissionSimpleCount> findCompletedMissionCountByPeriod(@Param("uuid") String uuid);
 
-    @Query(value = "SELECT * FROM mission WHERE period_type = :periodType ORDER BY RAND() LIMIT :limit", nativeQuery = true)
-    List<Mission> findRandomMissionsByPeriodType(@Param("periodType") String periodType, @Param("limit") int limit);
+    @Query(value = "SELECT m FROM Mission m WHERE m.periodType = :periodType ORDER BY RAND() LIMIT :limit")
+    List<Mission> findRandomMissionsByPeriodType(@Param("periodType") PeriodType periodType, @Param("limit") int limit);
+    List<MemberMission> findByMemberAndStatus(Member member, MissionStatus attr0);
 }

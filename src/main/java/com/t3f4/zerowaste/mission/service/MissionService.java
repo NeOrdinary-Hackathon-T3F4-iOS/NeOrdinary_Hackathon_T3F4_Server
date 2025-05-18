@@ -1,6 +1,13 @@
 package com.t3f4.zerowaste.mission.service;
 
 import com.t3f4.zerowaste.apipayload.code.status.ErrorStatus;
+import com.t3f4.zerowaste.avatar.domain.PointUse;
+import com.t3f4.zerowaste.avatar.repository.PointUseRepository;
+import com.t3f4.zerowaste.member.domain.Member;
+import com.t3f4.zerowaste.member.repository.MemberRepository;
+import com.t3f4.zerowaste.mission.domain.Mission;
+import com.t3f4.zerowaste.mission.domain.MissionStatus;
+import com.t3f4.zerowaste.mission.domain.RewardType;
 import com.t3f4.zerowaste.mission.dto.ImageDto;
 import com.t3f4.zerowaste.mission.dto.MissionStatDto;
 import com.t3f4.zerowaste.mission.dto.MissionStatRepoDto;
@@ -23,6 +30,8 @@ import org.springframework.transaction.annotation.Transactional;
 public class MissionService {
     private final MissionRepository missionRepository;
     private final MemberMissionRepository memberMissionRepository;
+    private final MemberRepository memberRepository;
+    private final PointUseRepository pointUseRepository;
 
     public MissionStatDto getMissionStat(long memberMissionId, String memberName) {
         List<MissionStatRepoDto> queryResult = memberMissionRepository.findByIdInDto(memberMissionId);
@@ -55,5 +64,33 @@ public class MissionService {
         return memberMissions.stream()
                 .map(MemberMissionResponse::from)
                 .toList();
+    }
+
+    @Transactional
+    public void completeMissionAndGiveReward(String memberUuid, Long memberMissionId) {
+        Member member = memberRepository.findByUuid(memberUuid)
+                .orElseThrow(() -> new GeneralException(ErrorStatus._MEMBER_NOT_FOUND));
+
+        MemberMission memberMission = memberMissionRepository.findById(memberMissionId)
+                .orElseThrow(() -> new GeneralException(ErrorStatus._MEMBER_MISSION_NOT_FOUND));
+
+        if (!memberMission.getMember().equals(member)) {
+            throw new GeneralException(ErrorStatus._UNAUTHORIZED_ACCESS);
+        }
+
+        if (memberMission.getStatus() != MissionStatus.GET_REWARDS) {
+            throw new GeneralException(ErrorStatus._INVALID_MISSION_STATUS);
+        }
+
+        // 상태 변경
+        memberMission.updateMissionStatus(MissionStatus.COMPLETED);
+
+        // 보상 지급
+        RewardType rewardType = memberMission.getMission().getReward();
+        PointUse pointUse = PointUse.builder()
+                .member(member)
+                .rewardType(rewardType)
+                .build();
+        pointUseRepository.save(pointUse);
     }
 }

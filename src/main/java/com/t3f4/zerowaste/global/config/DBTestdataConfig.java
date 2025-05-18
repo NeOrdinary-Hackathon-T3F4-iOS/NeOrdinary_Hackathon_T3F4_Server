@@ -71,11 +71,31 @@ public class DBTestdataConfig {
         MemberMission memberMission2 = MemberMission.builder()
                 .member(member)
                 .mission(mission2)
-                .status(MissionStatus.COMPLETED)
+                .status(MissionStatus.GET_REWARDS)
                 .count(2)
                 .completedAt(LocalDateTime.now().minusDays(1))
                 .build();
         memberMission2 = memberMissionRepository.save(memberMission2);
+
+        // Mission 3 생성 (보상: LEAF, status: GET_REWARDS)
+        Mission mission3 = Mission.builder()
+                .title("텀블러 사용하기")
+                .count(1)
+                .content("텀블러를 사용해 일회용 컵 줄이기")
+                .reward(RewardType.TIME)
+                .periodType(PeriodType.DAILY)
+                .build();
+        mission3 = missionRepository.save(mission3);
+
+        // MemberMission 3 생성 (GET_REWARDS 상태로 추가)
+        MemberMission memberMission3 = MemberMission.builder()
+                .member(member)
+                .mission(mission3)
+                .status(MissionStatus.GET_REWARDS)
+                .count(1)
+                .completedAt(LocalDateTime.now().minusHours(2))
+                .build();
+        memberMission3 = memberMissionRepository.save(memberMission3);
 
         // Photo 추가 (mission2에 대해 업로드된 사진)
         Photo photo1 = Photo.builder()
